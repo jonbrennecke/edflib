@@ -1,9 +1,14 @@
-// read edf file into hdf5
+/**
+ *
+ * EDFLIB is a cross platform EDF reading writing library in C++
+ *
+ */
+
+// TODO read edf file into hdf5
 // compile with --std=c++11
 
 #include <fstream>
 #include <map>
-#include <iostream>
 #include <vector>
 
 namespace edf {
@@ -29,7 +34,7 @@ namespace edf {
 	 * :param filename - file name
 	 * :return EDF file struct
 	 */
-	EDF* readedf ( const char *filename )
+	EDF* read ( std::string filename )
 	{
 		auto edf = new EDF();
 
