@@ -1,6 +1,9 @@
 // #include <octave/oct.h>
 
+#include "../bin/edf.hpp"
 #include "mex.h"
+#include "mexutils.hpp"
+#include <string>
 
 
 /**
@@ -13,5 +16,14 @@
  */
 void mexFunction ( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-	
+	edf::EDF* edfStruct = edf::read( std::string( cstrFromMx(prhs[0]) ) );
+
+	for( auto iter=edfStruct->general_header.begin(); iter!=edfStruct->general_header.end(); ++iter )
+	{
+		mexPrintf(iter->first.c_str() );
+	}
+
+	// mxArray *mxCreateStructArray()
+
+
 }
