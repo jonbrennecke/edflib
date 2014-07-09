@@ -7,10 +7,24 @@
 #include <vector>
 
 
-// struct EDF {
+struct EDF {
+	
+	// the primary header contains general information about the file
+	std::map<std::string,char*> general_header;
 
-// };
+	// the second header contains information about each signal
+	std::map< std::string, std::vector<char*> > signal_header;
 
+
+
+};
+
+EDF readedf ()
+{
+	auto edf = new EDF();
+
+	return edf;
+}
 
 int main (void) {
 
@@ -33,16 +47,12 @@ int main (void) {
 
 		// read the first 256 bits of header data, containing general
 		// information about the file
-		std::map<std::string,char*> general_header;
 		for( auto iter=h1_sizes.begin(); iter!=h1_sizes.end(); ++iter )
 		{
 			char *buffer = new char [*iter];
 			is.read(buffer,*iter);
 			general_header[ general_keys[iter - h1_sizes.begin()] ] = buffer;
 		}
-
-		// the second header contains information about each signal
-		std::map< std::string, std::vector<char*> > signal_header;
 
 		// cast num_signals to an int
 		const int ns = atoi( general_header["num_signals"] );
@@ -60,6 +70,7 @@ int main (void) {
 			}
 			signal_header[ signal_keys[iter - h2_sizes.begin()] ] = tmp;
 		}
+
 
 
 		is.close();
