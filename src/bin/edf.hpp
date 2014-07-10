@@ -4,7 +4,7 @@
  *
  * by @jonbrennecke - github.com/jonbrennecke
  *
- */ 
+ */  
 
 // TODO read edf file into hdf5
 
