@@ -1,1 +1,1 @@
-g++ --std=c++11 edf.cpp
+g++ --std=c++11 edf.hpp
