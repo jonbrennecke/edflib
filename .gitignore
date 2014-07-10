@@ -1,2 +1,5 @@
 *.edf
 *.mexw*
+*.o
+*.exe
+*.sublime*
