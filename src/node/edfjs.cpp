@@ -9,41 +9,58 @@
 #include <node.h>
 #include <string>
 #include <iostream>
-#include "../bin/edf.h"
+#include <typeinfo>
+#include "../bin/edf.hpp"
 
 using namespace v8;
+
+/**
+ *
+ * convert an vector into a v8 Array
+ *
+ */
+template <class T>
+Handle<Array> v8_array_factory ( std::vector<T> vec ) {
+	HandleScope scope;
+	Handle<Array> array = Array::New();
+
+	for( auto iter=vec.begin(); iter!=vec.end(); ++iter )
+	{
+		array->Set( iter - vec.begin(), Handle<T>(*iter) );
+	}
+	// array->Set(0, Integer::New(x));
+	// array->Set(1, Integer::New(y));
+	// array->Set(2, Integer::New(z));
+
+
+	return scope.Close(array);
+}
 
 
 /**
  *
- * convert an edf::EDF struct into a v8 Object
+ * convert an EDF struct from edflib into a v8 Object
  *
  */
-Handle<Object> v8_edf_factory ( edf::EDF * edfStruct )
+Handle<Object> v8_edf_factory ( edf::EDF * es )
 {
+	HandleScope scope;
 	Handle<Object> header = Object::New();
 
-	const std::vector<std::string> general_keys = {
-		"version", "patient_id", "rec_id", "start_date",
-		"end_time", "header_bytes", "reserved", "num_items",
-		"duration", "num_signals" }; 
-	const std::vector<std::string> signal_keys = { 
-		"labels", "transducer", "dimension", "phys_min",
-		"phys_max", "dig_min", "dig_max", "prefiltering", "num_samples" };
-
-	for( auto iter=general_keys.begin(); iter!=general_keys.end(); ++iter )
+	for( auto iter=es->general_header.begin(); iter!=es->general_header.end(); ++iter )
 	{
-		header->Set( String::New( (*iter).c_str() ), 
-			String::New( edfStruct->general_header[*iter] ) );
+		header->Set( String::New( iter->first.c_str() ), 
+			String::New( iter->second ) );
 	}
 
-	for( auto iter=signal_keys.begin(); iter!=signal_keys.end(); ++iter )
+	for( auto iter=es->signal_header.begin(); iter!=es->signal_header.end(); ++iter )
 	{
-		header->Set( String::New( (*iter).c_str() ), 
-			String::New( edfStruct->signal_header[*iter] ) );
+		v8_array_factory(iter->second);
+		// header->Set( String::New( (*iter).c_str() ), 
+			// String::New( edfStruct->signal_header[*iter] ) );
 	}
 
-	return header;
+	return scope.Close(header);
 }
 
 /**

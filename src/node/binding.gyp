@@ -2,7 +2,7 @@
 	"targets" : [
 		{
 			"target_name" : "edflib",
-			"sources" : ["edflib.cpp"],
+			"sources" : ["edfjs.cpp"],
 			"conditions" : [
 				[ "OS == \"mac\"", {
 					"xcode_settings": {

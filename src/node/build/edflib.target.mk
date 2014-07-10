@@ -85,7 +85,7 @@ INCS_Release := \
 	-I/Users/jon/.node-gyp/0.10.26/deps/v8/include
 
 OBJS := \
-	$(obj).target/$(TARGET)/edflib.o
+	$(obj).target/$(TARGET)/edfjs.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)
