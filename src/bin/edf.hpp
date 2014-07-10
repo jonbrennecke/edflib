@@ -4,7 +4,7 @@
  *
  * by @jonbrennecke - github.com/jonbrennecke
  *
- */
+ */  
 
 // TODO read edf file into hdf5
 
@@ -15,7 +15,8 @@
 
 namespace edf {
 
-	/**
+
+	/**   
 	 *
 	 * basic data structure for containing an EDF
 	 *
