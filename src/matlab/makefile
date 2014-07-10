@@ -1,20 +1,33 @@
 MINGWPATH=c:/MinGW
 
 # determine wether the system is 32 or 64 bits
-LBITS := $(shell getconf LONG_BIT)
-ifeq ($(LBITS),64)
-   # do 64 bit stuff here
-   MATLABROOT='c:\Program Files\MATLAB\R2012b'
+# LBITS := $(shell getconf LONG_BIT)
+# ifeq ($(LBITS),64)
+#    # do 64 bit stuff here
+
+#    MATLABROOT='c:\Program Files\MATLAB\R2012b'
+
+
+# else
+#    # do 32 bit stuff here
+#    MATLABROOT='c:\Program Files (x86)\MATLAB\R2010a Student'
+# endif
+
+PATH = 'c:\Program\ Files\MATLAB\R2012b'
+ifneq ("$(wildcard $(PATH))","")
+MATLABROOT='c:\Program Files\MATLAB\R2012b'
+LBITS := 64
 else
-   # do 32 bit stuff here
-   MATLABROOT='c:\Program Files (x86)\MATLAB\R2010a Student'
+MATLABROOT='c:\Program Files (x86)\MATLAB\R2010a Student'
+LBITS := 32
 endif
 
 TARGET=edf
 SRC=../bin/edf.hpp
 MEXSRC=edfmat.cpp
-CCX=g++.exe
-MEX=g++.exe 
+MINGW = C:\MinGW
+CCX = g++
+MEX = g++
 CXXFLAGS= -std=c++11 -Wall -O2
 CFLAGS = -Wall -O2 -std=c++11 -fpermissive
 # -Wall -O2 -I$(MATLABROOT)/extern/include $(SRC) $(LIBS)
@@ -34,8 +47,8 @@ all: mex
 
 mex: $(MEXSRC)
 	
-	@echo ------- building MEX file -------
+	# @echo ------- building MEX file -------
 
-	@rm -f *.mexw$(LBITS)
+	# @rm -f *.mexw$(LBITS)
 	$(MEX) $(MEXFLAGS) $(MEXSRC) -o $(TARGET).mexw$(LBITS)
 	
