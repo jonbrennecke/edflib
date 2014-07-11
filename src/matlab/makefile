@@ -7,6 +7,10 @@
 # by @jonbrennecke github.com/jonbrennecke
 # ======================================
 
+CXX := g++
+CXXFLAGS := -std=c++11 -Wall -O2
+CFLAGS := -Wall -O2 -std=c++11 -fpermissive
+
 ifeq ($(OS),Windows_NT)
 
 	# do windows things
@@ -24,25 +28,40 @@ ifeq ($(OS),Windows_NT)
 	# looks like we're using MATLAB with Mex
 	MEXC := g++
 	MEXEXT := .mex
+	LIBS := -L$(MATLABROOT)/bin/win$(LBITS) -L$(MATLABROOT)/extern/lib/win$(LBITS)/microsoft
+	MEXFLAGS := $(CFLAGS) -DMATLAB_MEX_FILE -shared
+	# -I$(MATLABROOT)/extern/include -shared $(LIBS)
+
 
 else
 
 	# it's a unix system!
 
 	# determine wether the system is 32 or 64 bits
-	LBITS := $(shell getconf LONG_BIT)
 
 	UNAME_S := $(shell uname -s)
+
+	# Linux
 	ifeq ($(UNAME_S),Linux)
-		CCFLAGS += -D LINUX
+		CFLAGS += -D LINUX
+		LBITS := $(shell getconf LONG_BIT)
+
 	endif
+
+	# OSX
 	ifeq ($(UNAME_S),Darwin)
-		CCFLAGS += -D OSX
+		CFLAGS += -D OSX
+
 
 		# looks like we're using Octave
 		# PATH = 'c:\Program\ Files\MATLAB\R2012b'
 		MEXC := g++
-		MEXEXT := .oct
+		MEXEXT := .mex
+		OCTAVEVER := 3.8.0
+		OCTAVEDIR := /usr/local/Cellar/octave/$(OCTAVEVER)
+		LIBS := -L$(OCTAVEDIR)/lib/octave/$(OCTAVEVER) -L$(OCTAVEDIR)/lib/octave/$(OCTAVEVER)/oct/x86_64-apple-darwin13.1.0/
+		LIBS += -loctave -loctinterp
+		MEXFLAGS := $(CFLAGS) -DMATLAB_MEX_FILE -I$(OCTAVEDIR)/include/octave-$(OCTAVEVER)/octave/ -shared $(LIBS)
 
 	endif
 
@@ -54,12 +73,6 @@ TARGET := edf
 SRC := ../bin/edf.hpp
 MEXSRC := edfmat.cpp
 MINGW := C:\MinGW
-CXX := g++
-CXXFLAGS := -std=c++11 -Wall -O2
-CFLAGS := -Wall -O2 -std=c++11 -fpermissive
-MEXFLAGS := $(CFLAGS) -DMATLAB_MEX_FILE -I$(MATLABROOT)/extern/include -shared $(LIBS)
-LIBS := -L$(MATLABROOT)/bin/win$(LBITS) -L$(MATLABROOT)/extern/lib/win$(LBITS)/microsoft -lmex -lmx -lmwlapack -lmwblas -leng
-
 
 all: mex
 
@@ -74,5 +87,5 @@ mex: $(MEXSRC)
 	# @echo ------- building MEX file -------
 
 	@rm -f *.mexw$(LBITS)
-	$(MEXC) $(MEXFLAGS) $(MEXSRC) -o $(TARGET).mexw$(LBITS)
+	$(MEXC) $(MEXFLAGS) $(MEXSRC) -o $(TARGET).mex$(WIN)$(LBITS)
 	

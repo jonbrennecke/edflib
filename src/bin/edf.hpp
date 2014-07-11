@@ -15,6 +15,50 @@
 
 namespace edf {
 
+	// char* strip_whitespace ( char * cstr )
+	// {
+
+	// } 
+
+	// void trim(char *str)
+	// {
+	// 	int i;
+	// 	int begin = 0;
+	// 	int end = strlen(str) - 1;
+
+	// 	while (isspace(str[begin]))
+	// 		begin++;
+
+	// 	while ((end >= begin) && isspace(str[end]))
+	// 		end--;
+
+	// 	// Shift all characters back to the start of the string array.
+	// 	for (i = begin; i <= end; i++)
+	// 		str[i - begin] = str[i];
+
+	// 	str[i - begin] = '\0'; // Null terminate string.
+	// }
+
+	char *trim(char *str)
+	{
+		char *end;
+
+		// Trim leading space
+		while(isspace(*str)) str++;
+
+		if(*str == 0)  // All spaces?
+			return str;
+
+		// Trim trailing space
+		end = str + strlen(str) - 1;
+		while(end > str && isspace(*end)) end--;
+
+		// Write new null terminator
+		*(end+1) = 0;
+
+		return str;
+	}
+
 
 	/**   
 	 *
@@ -40,7 +84,8 @@ namespace edf {
 	 * Read an EDF file
 	 *
 	 * :param filename - file name
-	 * :return EDF file struct
+	 * :return EDF file struct - filled if the file designated by 'filename' exists
+	 *		otherwise returns a blank EDF struct
 	 */
 	EDF* read ( std::string filename )
 	{
@@ -106,6 +151,11 @@ namespace edf {
 			}
 			
 			is.close();
+		}
+		else {
+
+			return edf;
+
 		}
 
 		return edf;
