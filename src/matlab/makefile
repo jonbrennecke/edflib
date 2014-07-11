@@ -26,7 +26,7 @@ ifeq ($(OS),Windows_NT)
 	endif
 
 	# looks like we're using MATLAB with Mex
-	MEXC := g++
+	MEXC := /usr/bin/g++ # TODO cygwin only
 	MEXEXT := .mex
 	LIBS := -L$(MATLABROOT)/bin/win$(LBITS) -L$(MATLABROOT)/extern/lib/win$(LBITS)/microsoft
 	MEXFLAGS := $(CFLAGS) -DMATLAB_MEX_FILE -shared
@@ -37,7 +37,7 @@ else
 
 	# it's a unix system!
 
-	# determine wether the system is 32 or 64 bits
+	# determine whether the system is 32 or 64 bits
 
 	UNAME_S := $(shell uname -s)
 
@@ -86,6 +86,6 @@ mex: $(MEXSRC)
 	
 	# @echo ------- building MEX file -------
 
-	@rm -f *.mexw$(LBITS)
+	# @rm -f *.mexw$(LBITS)
 	$(MEXC) $(MEXFLAGS) $(MEXSRC) -o $(TARGET).mex$(WIN)$(LBITS)
 	
