@@ -8,64 +8,74 @@
 #include <v8.h>
 #include <node.h>
 #include <string>
-#include <iostream>
-#include <typeinfo>
-#include "../bin/edf.hpp"
+#include "../lib/edf.h"
 
 using namespace v8;
 
 /**
  *
- * convert an vector into a v8 Array
- *
- */
-template <class T>
-Handle<Array> v8_array_factory ( std::vector<T> vec ) {
-	HandleScope scope;
-	Handle<Array> array = Array::New();
-
-	for( auto iter=vec.begin(); iter!=vec.end(); ++iter )
-	{
-		array->Set( iter - vec.begin(), Handle<T>(*iter) );
-	}
-	// array->Set(0, Integer::New(x));
-	// array->Set(1, Integer::New(y));
-	// array->Set(2, Integer::New(z));
-
-
-	return scope.Close(array);
-}
-
-
-/**
- *
  * convert an EDF struct from edflib into a v8 Object
  *
+ * :param es - EDF struct
+ * :return javascript object with the properties:
+ *		- header - array
+ *		- records - array of arrays of numbers
+ *		
+ *
  */
-Handle<Object> v8_edf_factory ( edf::EDF * es )
+Handle<Value> v8_edf_factory ( edf::EDF * es )
 {
 	HandleScope scope;
+	Handle<Object> v8EDF = Object::New();
 	Handle<Object> header = Object::New();
 
-	for( auto iter=es->general_header.begin(); iter!=es->general_header.end(); ++iter )
+	// the general header is a map of c-strings
+	for( auto it=es->general_header.begin(); it!=es->general_header.end(); ++it )
 	{
-		header->Set( String::New( iter->first.c_str() ), 
-			String::New( iter->second ) );
+		header->Set( String::New( it->first.c_str() ), 
+			String::New( it->second.c_str() ) );
 	}
 
-	for( auto iter=es->signal_header.begin(); iter!=es->signal_header.end(); ++iter )
+	// the signal header contains a map of vectors
+	// each of the vectors is converted into a v8 Array and added to the header Object
+	for( auto it=es->signal_header.begin(); it!=es->signal_header.end(); ++it )
 	{
-		v8_array_factory(iter->second);
-		// header->Set( String::New( (*iter).c_str() ), 
-			// String::New( edfStruct->signal_header[*iter] ) );
+		Handle<Array> array = Array::New();
+		for( auto it2=it->second.begin(); it2!=it->second.end(); ++it2 )
+		{
+			array->Set( it2 - it->second.begin(), String::New( (*it2).c_str() ) );
+		}	
+		header->Set( String::New( it->first.c_str() ), array );
 	}
 
-	return scope.Close(header);
+	v8EDF->Set( String::NewSymbol("header"), header );
+
+	// data record
+	// TODO can we create typed javascript array in the v8 layer?
+	Handle<Array> records = Array::New();
+	for( auto it=es->records.begin(); it!=es->records.end(); ++it )
+	{
+		const int i = it - es->records.begin();
+		const int samples = atoi( es->signal_header["num_samples"][ i ].c_str() );
+
+		Handle<Array> tmp = Array::New();
+		for ( int j = 0; j < samples; ++j )
+		{
+			tmp->Set( j, Number::New( (int)(*it)[j] ) );
+		}
+
+		records->Set( i, tmp );
+	}
+
+	v8EDF->Set( String::NewSymbol("records"), records );
+	return scope.Close( v8EDF );
 }
 
 /**
  *
- * read an edf
+ * read an edf file
+ *
+ * V8 wrapper around edf::read
  *
  */
 Handle<Value> read(const Arguments& args) 
@@ -80,13 +90,7 @@ Handle<Value> read(const Arguments& args)
 
 	std::string filename = *String::Utf8Value( args[0]->ToString() );
 
-
 	edf::EDF * edfStruct = edf::read( filename );
-
-	// Handle<Object> header = Object::New();
- //    Result->Set(String::New("header"), String::New("Stackoverflow"));
- //    Result->Set(String::New("url"), String::New("http://stackoverflow.com"));
- //    Result->Set(String::New("javascript_tagged"), Number::New(317566));
 
 	return scope.Close( v8_edf_factory( edfStruct ) );
 }

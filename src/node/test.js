@@ -1,5 +1,5 @@
-var edf = require( __dirname + '/build/Release/edflib' );
+var edf = require( __dirname + '/edf' );
 
-var file = edf.read( '../../BA1216 05_07_2012.edf' );
+var file = edf.read( '../../test.edf' );
 
-console.log(file);
+console.log( file.records[1].slice(0,20) );
