@@ -1,5 +1,5 @@
 var edf = require( __dirname + '/edf' );
 
-var file = edf.read( '../../test.edf' );
+var file = edf.read( '../../test2.edf' );
 
-console.log( file.records[1].slice(0,20) );
+console.log( file.records[1].length );

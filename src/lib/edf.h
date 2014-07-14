@@ -29,7 +29,7 @@ namespace edf {
 		std::map< std::string, std::vector<std::string> > signal_header;
 
 		// data records is 2-byte short ints
-		std::vector<int16_t*> records;
+		std::vector< std::vector<int16_t> > records;
 
 	};
 
@@ -93,15 +93,16 @@ namespace edf {
 			for ( int i = 0; i < ns; ++i )
 			{
 				const int samples = atoi( edf->signal_header["num_samples"][i].c_str() );
-				int16_t *rec = new int16_t[ samples ];
+				
+				std::vector<int16_t> rec(samples);
 
 				// convert 2 bytes (little endian) into one int16_t
-				for ( int j = 0, k = 0; j < (samples * 2) - 1; j+=2, ++k )
+				for( auto it=rec.begin(); it!=rec.end(); ++it )
 				{
 					int16_t n = 0;
 					n |= (unsigned char) is.get();
 					n |= is.get() << 8;
-					rec[k] = n;
+					*it = n;
 				}
 
 				edf->records.push_back(rec);

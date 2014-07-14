@@ -86,6 +86,6 @@ mex: $(MEXSRC)
 	
 	# @echo ------- building MEX file -------
 
-	# @rm -f *.mexw$(LBITS)
+	# @rm -f *.mex$(LBITS)
 	$(MEXC) $(MEXFLAGS) $(MEXSRC) -o $(TARGET).mex$(WIN)$(LBITS)
 	

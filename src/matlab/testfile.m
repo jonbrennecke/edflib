@@ -1,9 +1,13 @@
 
 
-filepath = '../../test.edf';
+filepath = '../../test2.edf';
 
 if exist(filepath,'file')
-	header = edf(filepath);
+	[ header, records ] = edf(filepath);
 
-	disp(header)
+	records{1,1}(1:20)
+	% (1,1:20)
+
+	% disp(header)
+
 end

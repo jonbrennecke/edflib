@@ -51,18 +51,15 @@ Handle<Value> v8_edf_factory ( edf::EDF * es )
 	v8EDF->Set( String::NewSymbol("header"), header );
 
 	// data record
-	// TODO can we create typed javascript array in the v8 layer?
+	// TODO can we create a typed javascript array in the v8 layer?
 	Handle<Array> records = Array::New();
 	for( auto it=es->records.begin(); it!=es->records.end(); ++it )
 	{
 		const int i = it - es->records.begin();
-		const int samples = atoi( es->signal_header["num_samples"][ i ].c_str() );
 
 		Handle<Array> tmp = Array::New();
-		for ( int j = 0; j < samples; ++j )
-		{
-			tmp->Set( j, Number::New( (int)(*it)[j] ) );
-		}
+		for( auto it2=(*it).begin(); it2!=(*it).end(); ++it2 )
+			tmp->Set(it2 - (*it).begin(), Number::New( (int)(*it2) ) );
 
 		records->Set( i, tmp );
 	}
