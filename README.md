@@ -1,7 +1,28 @@
-edflib
+EDFLib
 ======
 
 EDFLib is a C++ libaray for reading EDF files. It comes with bindings for Node.js and Matlab.  Python bindings would be nice too, but that's still on the horizon.
+
+Installation
+=======
+
+###node
+cd into the /node folder in /src and run node-gyp
+
+```
+cd /src/node
+node-gyp build
+
+```
+
+###matlab
+
+As an [iff](http://www.elseiff.com/) package, simply run:
+
+```
+iff install edf
+```
+
 
 License
 =======
