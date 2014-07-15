@@ -10,18 +10,22 @@ Installation
 cd into the /node folder in /src and run node-gyp
 
 ```
-cd /src/node
+cd src/node
 node-gyp build
 
 ```
 
 ###matlab
-
-As an [iff](http://www.elseiff.com/) package, simply run:
-
+cd into the matlab folder in /src and run GNU make
 ```
-iff install edf
+cd src/matlab
+make
 ```
+> As an [iff](http://www.elseiff.com/) package, simply run:
+
+> ```
+> iff install edf
+> ```
 
 
 License
