@@ -17,7 +17,7 @@ namespace edf {
 
 	/**   
 	 *
-	 * basic data structure for containing an EDF
+	 * basic data structure representing an EDF
 	 *
 	 */
 	struct EDF {
@@ -38,9 +38,9 @@ namespace edf {
 	 *
 	 * Read an EDF file
 	 *
-	 * :param filename - file name
-	 * :return EDF file struct - filled if the file designated by 'filename' exists
-	 *		otherwise returns a blank EDF struct
+	 * :param filename - file name as a string
+	 * :return - an EDF file struct that is filled if the file designated by 'filename' exists
+	 *		otherwise the returned struct will be empty
 	 */
 	EDF* read ( std::string filename )
 	{

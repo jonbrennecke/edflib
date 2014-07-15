@@ -11,13 +11,6 @@
 var edflib = require( __dirname + '/build/Release/edflib' ),
 	rtrim = /\s+$/;
 
-function EDF () {
-
-};
-
-EDF.prototype = {
-
-};
 
 module.exports = {
 	read : function ( filename ) {

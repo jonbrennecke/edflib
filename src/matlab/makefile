@@ -76,16 +76,10 @@ MINGW := C:\MinGW
 
 all: mex
 
-# lib: $(SRC)
-
-# 	@echo ------- building C++ source -------
-
-# 	$(CXX) $(CXXFLAGS) -c $(SRC) -o $(subst ../bin,.,$(subst .hpp,.o, $(SRC)))
-
 mex: $(MEXSRC)
 	
-	# @echo ------- building MEX file -------
+	# ------- building MEX file -------
 
-	# @rm -f *.mex$(LBITS)
+	# @rm -f *.mex*
 	$(MEXC) $(MEXFLAGS) $(MEXSRC) -o $(TARGET).mex$(WIN)$(LBITS)
 	
