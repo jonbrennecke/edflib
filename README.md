@@ -7,7 +7,7 @@ Installation
 =======
 
 ###node
-cd into the /node folder in /src and run node-gyp
+cd into the /node folder in /src and run node-gyp to compile the C++ source files.
 
 ```
 cd src/node
@@ -16,17 +16,11 @@ node-gyp build
 ```
 
 ###matlab
-cd into the matlab folder in /src and run GNU make
+cd into the matlab folder in /src and run GNU Make to compile the C++ source files.
 ```
 cd src/matlab
 make
 ```
-> As an [iff](http://www.elseiff.com/) package, simply run:
-
-> ```
-> iff install edf
-> ```
-
 
 License
 =======
