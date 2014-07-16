@@ -18,19 +18,18 @@ ifeq ($(OS),Windows_NT)
 	MINGWPATH=c:/MinGW
 	PATH = 'c:\Program\ Files\MATLAB\R2012b'
 	ifneq ("$(wildcard $(PATH))","")
-		MATLABROOT='c:\Program Files\MATLAB\R2012b'
+		MATLABROOT=c:\Program\ Files\MATLAB\R2012b
 		LBITS := 64
 	else
-		MATLABROOT='c:\Program Files (x86)\MATLAB\R2010a Student'
+		MATLABROOT=c:\Program\ Files\ (x86)\MATLAB\R2010a\ Student
 		LBITS := 32
 	endif
 
 	# looks like we're using MATLAB with Mex
-	MEXC := /usr/bin/g++ # TODO cygwin only
+	MEXC := g++
 	MEXEXT := .mex
-	LIBS := -L$(MATLABROOT)/bin/win$(LBITS) -L$(MATLABROOT)/extern/lib/win$(LBITS)/microsoft
-	MEXFLAGS := $(CFLAGS) -DMATLAB_MEX_FILE -shared
-	# -I$(MATLABROOT)/extern/include -shared $(LIBS)
+	LIBS := -L"$(MATLABROOT)/bin/win$(LBITS)" -L"$(MATLABROOT)/extern/lib/win$(LBITS)/microsoft"
+	MEXFLAGS := $(CFLAGS) -DMATLAB_MEX_FILE -I'$(MATLABROOT)/extern/include" -shared $(LIBS)
 
 
 else
@@ -77,9 +76,5 @@ MINGW := C:\MinGW
 all: mex
 
 mex: $(MEXSRC)
-	
-	# ------- building MEX file -------
-
-	# @rm -f *.mex*
 	$(MEXC) $(MEXFLAGS) $(MEXSRC) -o $(TARGET).mex$(WIN)$(LBITS)
 	
