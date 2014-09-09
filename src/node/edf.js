@@ -8,7 +8,7 @@
 
 
 // load the V8 library
-var edflib = require( __dirname + '/build/Release/edflib' ),
+var edflib = require( __dirname + '/src/node/build/Release/edflib' ),
 	rtrim = /\s+$/;
 
 
