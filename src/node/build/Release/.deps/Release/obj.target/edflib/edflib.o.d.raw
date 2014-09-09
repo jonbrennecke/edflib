@@ -1,9 +1,0 @@
-Release/obj.target/edflib/edflib.o: ../edflib.cpp \
-  /Users/jon/.node-gyp/0.10.26/deps/v8/include/v8.h \
-  /Users/jon/.node-gyp/0.10.26/deps/v8/include/v8stdint.h \
-  /Users/jon/.node-gyp/0.10.26/src/node.h \
-  /Users/jon/.node-gyp/0.10.26/deps/uv/include/uv.h \
-  /Users/jon/.node-gyp/0.10.26/deps/uv/include/uv-private/uv-unix.h \
-  /Users/jon/.node-gyp/0.10.26/deps/uv/include/uv-private/ngx-queue.h \
-  /Users/jon/.node-gyp/0.10.26/deps/uv/include/uv-private/uv-darwin.h \
-  /Users/jon/.node-gyp/0.10.26/src/node_object_wrap.h ../../bin/edf.hpp

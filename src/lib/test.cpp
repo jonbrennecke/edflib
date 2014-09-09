@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main (void){
-	edf::EDF* es = edf::read("../../test2.edf");
+	edf::EDF* es = edf::read("../../../test2.edf");
 
 	// std::cout << "============================== GENERAL HEADER ============================== " << std::endl;
 

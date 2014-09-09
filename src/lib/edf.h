@@ -7,30 +7,26 @@
  *
  */  
 
-// TODO read edf file into hdf5
-
 #include <fstream>
 #include <map>
 #include <vector>
+#include <iostream>
 
 namespace edf {
 
 	/**   
 	 *
-	 * basic data structure representing an EDF
+	 * Basic data structure representing an EDF
 	 *
+ 	 * - The primary header contains general information about the file
+	 * - The second header contains information about each signal
+	 * - The data records is 2-byte short ints that are scaled into doubles as 
+	 *   part of the reading process.
 	 */
-	struct EDF {
-		
-		// the primary header contains general information about the file
+	struct EDF {	
 		std::map<std::string,std::string> general_header;
-
-		// the second header contains information about each signal
 		std::map< std::string, std::vector<std::string> > signal_header;
-
-		// data records is 2-byte short ints
-		std::vector< std::vector<int16_t> > records;
-
+		std::vector< std::vector<double> > records;
 	};
 
 
@@ -50,7 +46,6 @@ namespace edf {
 		std::ifstream is(filename, std::ios::in | std::ios::binary);
 		if ( is )
 		{
-
 			// constant header sizes and keys
 			const std::vector<int> h1_sizes = { 8,80,80,8,8,8,44,8,8,4 };
 			const std::vector<int> h2_sizes = { 16,80,8,8,8,8,8,80,8,32 };
@@ -92,9 +87,17 @@ namespace edf {
 			// values are stored as 2 byte ascii in 2's complement
 			for ( int i = 0; i < ns; ++i )
 			{
-				const int samples = atoi( edf->signal_header["num_samples"][i].c_str() );
+				// retrieve constants from the header
+				const int samples = atoi(edf->signal_header["num_samples"][i].c_str());
+				const int phys_min = atoi(edf->signal_header["phys_min"][i].c_str());
+				const int phys_max = atoi(edf->signal_header["phys_max"][i].c_str());
+				const int dig_min = atoi(edf->signal_header["dig_min"][i].c_str());
+				const int dig_max = atoi(edf->signal_header["dig_max"][i].c_str());
+				const double scale = ((double)(phys_max - phys_min))/((double)(dig_max - dig_min));
+				const double dc = phys_max - (scale * dig_max);
 				
-				std::vector<int16_t> rec(samples);
+				// allocate a vector of doubles for each sample
+				std::vector<double> rec(samples);
 
 				// convert 2 bytes (little endian) into one int16_t
 				for( auto it=rec.begin(); it!=rec.end(); ++it )
@@ -102,13 +105,15 @@ namespace edf {
 					int16_t n = 0;
 					n |= (unsigned char) is.get();
 					n |= is.get() << 8;
-					*it = n;
+					*it = (double)n * scale + dc;
 				}
 
 				edf->records.push_back(rec);
 			}
-			
 			is.close();
+		}
+		else {
+			std::cerr << "The file '" << filename << "' could not be located for reading." << std::endl;
 		}
 		return edf;
 	}

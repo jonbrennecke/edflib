@@ -16,7 +16,6 @@ module.exports = {
 	read : function ( filename ) {
 		var edf = edflib.read( filename );
 
-
 		// trim trailing whitespace from the header fields
 		// ---
 		// since javascript's regex engine is so blazingly fast, we'll 

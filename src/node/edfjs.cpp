@@ -51,7 +51,6 @@ Handle<Value> v8_edf_factory ( edf::EDF * es )
 	v8EDF->Set( String::NewSymbol("header"), header );
 
 	// data record
-	// TODO can we create a typed javascript array in the v8 layer?
 	Handle<Array> records = Array::New();
 	for( auto it=es->records.begin(); it!=es->records.end(); ++it )
 	{
@@ -59,7 +58,7 @@ Handle<Value> v8_edf_factory ( edf::EDF * es )
 
 		Handle<Array> tmp = Array::New();
 		for( auto it2=(*it).begin(); it2!=(*it).end(); ++it2 )
-			tmp->Set(it2 - (*it).begin(), Number::New( (int)(*it2) ) );
+			tmp->Set(it2 - (*it).begin(), Number::New( (double)(*it2) ) );
 
 		records->Set( i, tmp );
 	}
