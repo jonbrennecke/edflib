@@ -41,7 +41,7 @@ Handle<Value> EdfWrapper::New(const Arguments& args)
  * Export the class to javascript
  *
  */
-void Export(Handle<Object> exports, const char* name)
+void EdfWrapper::Export(Handle<Object> exports, const char* name)
 {
 	Local<FunctionTemplate> tpl = FunctionTemplate::New(EdfWrapper::New);
 	tpl->SetClassName(String::NewSymbol(name));
