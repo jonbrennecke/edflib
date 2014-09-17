@@ -4,99 +4,65 @@
  *
  */
 
-// #define BUILDING_NODE_EXTENSION
-#include <v8.h>
-#include <node.h>
-#include <string>
-#include "../lib/edf.h"
+#ifndef BUILDING_NODE_EXTENSION
+#define BUILDING_NODE_EXTENSION
+#endif
+
+#include "edfjs.h"
 
 using namespace v8;
 
-/**
- *
- * convert an EDF struct from edflib into a v8 Object
- *
- * :param es - EDF struct
- * :return javascript object with the properties:
- *		- header - array
- *		- records - array of arrays of numbers
- *		
- *
- */
-Handle<Value> v8_edf_factory ( edf::EDF * es )
+Persistent<Function> EdfWrapper::constructor;
+
+EdfWrapper::EdfWrapper(const char* filename) : Edf(filename) {}
+EdfWrapper::~EdfWrapper(){}
+
+Handle<Value> EdfWrapper::New(const Arguments& args)
 {
 	HandleScope scope;
-	Handle<Object> v8EDF = Object::New();
-	Handle<Object> header = Object::New();
 
-	// the general header is a map of c-strings
-	for( auto it=es->general_header.begin(); it!=es->general_header.end(); ++it )
-	{
-		header->Set( String::New( it->first.c_str() ), 
-			String::New( it->second.c_str() ) );
+	// Invoked as constructor: `new MyObject(...)`
+	if (args.IsConstructCall()) {
+		String::Utf8Value filename(args[0]->IsUndefined() ? String::New("") : args[0]->ToString());
+		EdfWrapper* obj = new EdfWrapper((const char*)(*filename));
+		obj->Wrap(args.This());
+		return args.This();
+	
+	// Invoked as plain function `MyObject(...)`, turn into construct call.
+	} else {
+		const int argc = 1;
+		Local<Value> argv[argc] = { args[0] };
+		return scope.Close(EdfWrapper::constructor->NewInstance(argc, argv));
 	}
-
-	// the signal header contains a map of vectors
-	// each of the vectors is converted into a v8 Array and added to the header Object
-	for( auto it=es->signal_header.begin(); it!=es->signal_header.end(); ++it )
-	{
-		Handle<Array> array = Array::New();
-		for( auto it2=it->second.begin(); it2!=it->second.end(); ++it2 )
-		{
-			array->Set( it2 - it->second.begin(), String::New( (*it2).c_str() ) );
-		}	
-		header->Set( String::New( it->first.c_str() ), array );
-	}
-
-	v8EDF->Set( String::NewSymbol("header"), header );
-
-	// data record
-	Handle<Array> records = Array::New();
-	for( auto it=es->records.begin(); it!=es->records.end(); ++it )
-	{
-		const int i = it - es->records.begin();
-
-		Handle<Array> tmp = Array::New();
-		for( auto it2=(*it).begin(); it2!=(*it).end(); ++it2 )
-			tmp->Set(it2 - (*it).begin(), Number::New( (double)(*it2) ) );
-
-		records->Set( i, tmp );
-	}
-
-	v8EDF->Set( String::NewSymbol("records"), records );
-	return scope.Close( v8EDF );
 }
 
 /**
  *
- * read an edf file
- *
- * V8 wrapper around edf::read
+ * Export the class to javascript
  *
  */
-Handle<Value> read(const Arguments& args) 
+void Export(Handle<Object> exports, const char* name)
 {
-	HandleScope scope;
+	Local<FunctionTemplate> tpl = FunctionTemplate::New(EdfWrapper::New);
+	tpl->SetClassName(String::NewSymbol(name));
+	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-	if ( ! args.Length() || !args[0]->IsString() )
-	{
-		ThrowException(Exception::TypeError(String::New( "Invalid input arguments" )));
-		return scope.Close( Undefined() );
-	}
+	// prototype
+	// tpl->PrototypeTemplate()->Set(String::NewSymbol("get"),
+	// 	FunctionTemplate::New(EdfWrapper::Get)->GetFunction());
+	// tpl->PrototypeTemplate()->Set(String::NewSymbol("set"),
+	// 	FunctionTemplate::New(EdfWrapper::Set)->GetFunction());
+	// tpl->PrototypeTemplate()->Set(String::NewSymbol("length"),
+	// 	FunctionTemplate::New(EdfWrapper::Length)->GetFunction());
 
-	std::string filename = *String::Utf8Value( args[0]->ToString() );
-
-	edf::EDF * edfStruct = edf::read( filename );
-
-	return scope.Close( v8_edf_factory( edfStruct ) );
+	EdfWrapper::constructor = Persistent<Function>::New(tpl->GetFunction());
+	exports->Set(String::NewSymbol(name), EdfWrapper::constructor);
 }
-
 
 
 void init( Handle<Object> exports ) 
 {
-	exports->Set( String::NewSymbol( "read" ),
-		FunctionTemplate::New( read )->GetFunction() );
+	EdfWrapper::Export(exports,"Edf");
 }
 
 NODE_MODULE( edflib, init )
