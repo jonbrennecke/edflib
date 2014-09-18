@@ -8,13 +8,18 @@
 #define BUILDING_NODE_EXTENSION
 #endif
 
+#define VAR_TO_STR(var) #var
+
 #include "edfjs.h"
+
+#include <iostream>
 
 using namespace v8;
 
 Persistent<Function> EdfWrapper::constructor;
 
 EdfWrapper::EdfWrapper(const char* filename) : Edf(filename) {}
+EdfWrapper::EdfWrapper(){}
 EdfWrapper::~EdfWrapper(){}
 
 Handle<Value> EdfWrapper::New(const Arguments& args)
@@ -38,6 +43,60 @@ Handle<Value> EdfWrapper::New(const Arguments& args)
 
 /**
  *
+ * Return the array value at an index
+ *
+ */
+Handle<Value> EdfWrapper::GetData(const Arguments& args)
+{
+	// open scope and unwrap object
+	HandleScope scope;
+	EdfWrapper *self = node::ObjectWrap::Unwrap<EdfWrapper>(args.This());
+
+	// read argument
+	size_t index = (size_t)args[0]->IsUndefined() ? 0 : args[0]->NumberValue();
+
+	// get the data
+	double* data = self->data_[index];
+	Handle<Array> array = Array::New();
+
+	size_t samples = (size_t)atoi(self->extendedHeader_[index]->samples);
+	std::cout << samples << std::endl;
+	for(size_t i = 0; i < samples; i++) {
+		array->Set( i, Number::New(data[i]) );
+	}
+
+	return scope.Close(array);
+}
+
+Handle<Value> EdfWrapper::GetHeader(const Arguments& args)
+{
+	// open scope and unwrap object
+	HandleScope scope;
+	EdfWrapper *self = node::ObjectWrap::Unwrap<EdfWrapper>(args.This());
+
+	// header->Set( String::New(  ), array );	
+
+	self->basicHeader_->version
+
+	version
+	patientId
+	recordId
+	start
+	end
+	bytes
+	reserved
+	nr
+	duration
+	ns
+
+	std::cout << VAR_TO_STR(self->basicHeader_->version) << std::endl;
+
+	Handle<Object> header = Object::New();
+	return scope.Close(header);
+}
+
+/**
+ *
  * Export the class to javascript
  *
  */
@@ -48,19 +107,17 @@ void EdfWrapper::Export(Handle<Object> exports, const char* name)
 	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
 	// prototype
-	// tpl->PrototypeTemplate()->Set(String::NewSymbol("get"),
-	// 	FunctionTemplate::New(EdfWrapper::Get)->GetFunction());
-	// tpl->PrototypeTemplate()->Set(String::NewSymbol("set"),
-	// 	FunctionTemplate::New(EdfWrapper::Set)->GetFunction());
-	// tpl->PrototypeTemplate()->Set(String::NewSymbol("length"),
-	// 	FunctionTemplate::New(EdfWrapper::Length)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("getData"),
+		FunctionTemplate::New(EdfWrapper::GetData)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("getHeader"),
+		FunctionTemplate::New(EdfWrapper::GetHeader)->GetFunction());
 
-	EdfWrapper::constructor = Persistent<Function>::New(tpl->GetFunction());
-	exports->Set(String::NewSymbol(name), EdfWrapper::constructor);
+	constructor = Persistent<Function>::New(tpl->GetFunction());
+	exports->Set(String::NewSymbol(name), constructor);
 }
 
 
-void init( Handle<Object> exports ) 
+void init( Handle<Object> exports, Handle<Object> module ) 
 {
 	EdfWrapper::Export(exports,"Edf");
 }
