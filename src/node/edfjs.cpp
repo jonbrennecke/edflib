@@ -8,8 +8,6 @@
 #define BUILDING_NODE_EXTENSION
 #endif
 
-#define VAR_TO_STR(var) #var
-
 #include "edfjs.h"
 
 #include <iostream>
@@ -68,30 +66,30 @@ Handle<Value> EdfWrapper::GetData(const Arguments& args)
 	return scope.Close(array);
 }
 
+// a couple awful little macros
+#define STRINGIFY(var) #var
+#define DOFIELD(field,header,obj) (obj)->Set( String::New(STRINGIFY((field))), (header)->(version));
+
 Handle<Value> EdfWrapper::GetHeader(const Arguments& args)
 {
 	// open scope and unwrap object
 	HandleScope scope;
 	EdfWrapper *self = node::ObjectWrap::Unwrap<EdfWrapper>(args.This());
 
-	// header->Set( String::New(  ), array );	
-
-	self->basicHeader_->version
-
-	version
-	patientId
-	recordId
-	start
-	end
-	bytes
-	reserved
-	nr
-	duration
-	ns
-
-	std::cout << VAR_TO_STR(self->basicHeader_->version) << std::endl;
 
 	Handle<Object> header = Object::New();
+
+	DOFIELD(version,self->basicHeader_,header)
+	DOFIELD(patientId,self->basicHeader_,header)
+	DOFIELD(recordId,self->basicHeader_,header)
+	DOFIELD(start,self->basicHeader_,header)
+	DOFIELD(end,self->basicHeader_,header)
+	DOFIELD(bytes,self->basicHeader_,header)
+	DOFIELD(reserved,self->basicHeader_,header)
+	DOFIELD(nr,self->basicHeader_,header)
+	DOFIELD(duration,self->basicHeader_,header)
+	DOFIELD(ns,self->basicHeader_,header)
+	
 	return scope.Close(header);
 }
 
