@@ -9,39 +9,51 @@ private:
 
 	struct edfBasicHeader_t
 	{
-		char version[8];
-		char patientId[80];
-		char recordId[80];
-		char start[8];
-		char end[8];
-		char bytes[8];
-		char reserved[44];
-		char nr[8];
-		char duration[8];
-		char ns[4];
+		char version[9];
+		char patientId[81];
+		char recordId[81];
+		char start[9];
+		char end[9];
+		char bytes[9];
+		char reserved[45];
+		char nr[9];
+		char duration[9];
+		char ns[5];
+
+		static std::istream& __deserialize(std::istream&, edfBasicHeader_t&);
+		static std::ostream& __serialize(std::ostream&, const edfBasicHeader_t&);
+
+		friend std::istream& operator>> (std::istream&, Edf::edfBasicHeader_t& );
+		friend std::ostream& operator<< (std::ostream&, const Edf::edfBasicHeader_t&);
 	};
 
 	struct edfExtendedHeader_t
 	{
-		char labels[16];
-		char transducer[80];
-		char dimension[8];
-		char physMin[8];
-		char physMax[8];
-		char digMin[8];
-		char digMax[8];
-		char prefiltering[80];
-		char samples[8];
-		char reserved[32];
+		char labels[17];
+		char transducer[81];
+		char dimension[9];
+		char physMin[9];
+		char physMax[9];
+		char digMin[9];
+		char digMax[9];
+		char prefiltering[81];
+		char samples[9];
+		char reserved[33];
+
+		static std::istream& __deserialize(std::istream&, edfExtendedHeader_t&);
+		static std::ostream& __serialize(std::ostream&, const edfExtendedHeader_t&);
+
+		friend std::istream& operator>> (std::istream&, Edf::edfExtendedHeader_t& );
+		friend std::ostream& operator<< (std::ostream&, const Edf::edfExtendedHeader_t&);
 	};
 
 protected:
-	edfBasicHeader_t* basicHeader_;
-	edfExtendedHeader_t** extendedHeader_;
+	edfBasicHeader_t basicHeader_;
+	edfExtendedHeader_t* extendedHeader_;
 	double** data_; // array of data arrays
 	const char* filename_;
-	static std::istream& __deserialize ( std::istream&, Edf& );
-	static std::ostream& __serialize ( std::ostream&, const Edf& edf );
+	static std::istream& __deserialize(std::istream&, Edf&);
+	static std::ostream& __serialize(std::ostream&, const Edf& edf);
 
 public:
 
@@ -50,15 +62,28 @@ public:
 	~Edf();
 
 	// stream operators need to be able to access the protected 
-	// static serialization/deserialization methods
+	// static serialization/deserialization methods of Edf and 
+	// it's private header clases
 	friend std::ostream& operator<<( std::ostream&, const Edf& );
 	friend std::istream& operator>>( std::istream&, Edf& );
+	friend std::istream& operator>> (std::istream&, Edf::edfBasicHeader_t& );
+	friend std::ostream& operator<< (std::ostream&, const Edf::edfBasicHeader_t&);
+	friend std::istream& operator>> (std::istream&, Edf::edfExtendedHeader_t& );
+	friend std::ostream& operator<< (std::ostream&, const Edf::edfExtendedHeader_t&);
 
 	friend class EdfWrapper;
 };
 
-// stream operators
-std::istream& operator>> ( std::istream& is, Edf& );
-std::ostream& operator<< ( std::ostream& os, const Edf& edf );
+// stream operators for edfExtendedHeader_t
+std::istream& operator>> (std::istream&, Edf::edfExtendedHeader_t&);
+std::ostream& operator<< (std::ostream&, const Edf::edfExtendedHeader_t&);
+
+// stream operators for edfBasicHeader_t
+std::istream& operator>> (std::istream&, Edf::edfBasicHeader_t&);
+std::ostream& operator<< (std::ostream&, const Edf::edfBasicHeader_t&);
+
+// stream operators for Edf
+std::istream& operator>> (std::istream&, Edf&);
+std::ostream& operator<< (std::ostream&, const Edf&);
 
 #endif
