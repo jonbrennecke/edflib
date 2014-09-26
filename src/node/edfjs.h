@@ -5,6 +5,10 @@
 #include <v8.h>
 #include <node.h>
 
+// inspect NODE_MODULE_VERSION
+// #include <node_object_wrap.h>
+// typedef v8::internal::Arguments Arguments;
+
 using namespace v8;
 
 class EdfWrapper : public node::ObjectWrap, public Edf

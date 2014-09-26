@@ -22,6 +22,7 @@ EdfWrapper::~EdfWrapper(){}
 
 Handle<Value> EdfWrapper::New(const Arguments& args)
 {
+	// Isolate* isolate = Isolate::GetCurrent();
 	HandleScope scope;
 
 	// Invoked as constructor: `new MyObject(...)`
@@ -84,8 +85,8 @@ Handle<Value> EdfWrapper::GetHeader(const Arguments& args)
 	header->Set( String::New("version"), String::New(self->basicHeader_.version));
 	header->Set( String::New("patientId"), String::New(self->basicHeader_.patientId));
 	header->Set( String::New("recordId"), String::New(self->basicHeader_.recordId));
-	header->Set( String::New("start"), String::New(self->basicHeader_.start));
-	header->Set( String::New("end"), String::New(self->basicHeader_.end));
+	header->Set( String::New("startdate"), String::New(self->basicHeader_.startdate));
+	header->Set( String::New("starttime"), String::New(self->basicHeader_.starttime));
 	header->Set( String::New("bytes"), String::New(self->basicHeader_.bytes));
 	header->Set( String::New("reserved"), String::New(self->basicHeader_.reserved));
 	header->Set( String::New("nr"), String::New(self->basicHeader_.nr));

@@ -63,8 +63,8 @@ std::istream& Edf::edfBasicHeader_t::__deserialize ( std::istream& is, edfBasicH
 		is.get(header.version,sizeof(header.version));
 		is.get(header.patientId,sizeof(header.patientId));
 		is.get(header.recordId,sizeof(header.recordId));
-		is.get(header.start,sizeof(header.start));
-		is.get(header.end,sizeof(header.end));
+		is.get(header.startdate,sizeof(header.startdate));
+		is.get(header.starttime,sizeof(header.starttime));
 		is.get(header.bytes,sizeof(header.bytes));
 		is.get(header.reserved,sizeof(header.reserved));
 		is.get(header.nr,sizeof(header.nr));

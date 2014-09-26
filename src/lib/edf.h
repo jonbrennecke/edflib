@@ -12,8 +12,8 @@ private:
 		char version[9];
 		char patientId[81];
 		char recordId[81];
-		char start[9];
-		char end[9];
+		char startdate[9];
+		char starttime[9];
 		char bytes[9];
 		char reserved[45];
 		char nr[9];
