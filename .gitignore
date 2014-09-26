@@ -1,6 +1,1 @@
-*.edf
-*.mex*
-*.o
-*.exe
-*.sublime*
-*.out
+src/node/build/*

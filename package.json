@@ -1,0 +1,22 @@
+{
+  "name": "edflib",
+  "version": "1.0.0",
+  "description": "an npm module for reading Edf files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonbrennecke/edflib"
+  },
+  "keywords": [
+    "edf"
+  ],
+  "author": "Jon Brennecke",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jonbrennecke/edflib/issues"
+  },
+  "homepage": "https://github.com/jonbrennecke/edflib"
+}
