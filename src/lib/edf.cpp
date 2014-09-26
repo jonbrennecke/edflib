@@ -45,6 +45,8 @@ Edf::Edf( const char* filename ) : filename_(filename)
 	}
 }
 
+Edf::Edf() {}
+
 Edf::~Edf() {}
 
 

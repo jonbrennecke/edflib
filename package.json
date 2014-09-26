@@ -4,7 +4,7 @@
   "description": "an npm module for reading Edf files",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install" : "node build.js"
   },
   "repository": {
     "type": "git",
@@ -13,10 +13,18 @@
   "keywords": [
     "edf"
   ],
-  "author": "Jon Brennecke",
+  "author": {
+    "name": "Jon Brennecke"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jonbrennecke/edflib/issues"
   },
-  "homepage": "https://github.com/jonbrennecke/edflib"
+  "homepage": "https://github.com/jonbrennecke/edflib",
+  "readme": "EDFLib\n======\n\nEDFLib is a C++ libaray for reading EDF files. It comes with bindings for Node.js and Matlab.  Python bindings would be nice too, but that's still on the horizon.\n\nInstallation\n=======\n\n###node\ncd into the /node folder in /src and run node-gyp to compile the C++ source files.\n\n```\ncd src/node\nnode-gyp build\n\n```\n\n###matlab\ncd into the matlab folder in /src and run GNU Make to compile the C++ source files.\n```\ncd src/matlab\nmake\n```\n\nLicense\n=======\n\nCopyright (c) 2014 Jonathan Brennecke\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.\n",
+  "readmeFilename": "README.md",
+  "gitHead": "6622cc3cff4caeb09c4917ccab768835820d55b1",
+  "_id": "edflib@1.0.0",
+  "_shasum": "e5e5963943aaa711aaebb10d4bb3d38eb8e60f09",
+  "_from": "edflib@"
 }

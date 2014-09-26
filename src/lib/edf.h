@@ -2,6 +2,7 @@
 #define EDF_H
 
 #include <fstream>
+#include <stdint.h>
 
 class Edf
 {
